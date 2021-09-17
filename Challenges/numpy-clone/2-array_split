@@ -1,0 +1,92 @@
+// Vector vStack and hStack like Numpy
+#include <iostream>
+#include <vector>
+using namespace std;
+
+typedef uint16_t MatElement;
+typedef vector<MatElement> MatVector;
+typedef vector<MatVector> Mat;
+typedef unsigned short let;
+
+
+void showMat(Mat& mat) {
+	cout << "---------\n";
+	for (let row = 0; row < mat.size(); row++)
+	{
+		for (let col = 0; col < mat[row].size(); col++)
+		{
+			cout << mat[row][col] << " ";
+		}
+		cout << "\n";
+	}
+	cout << "---------\n";
+}
+
+void showSize(Mat& mat) {
+	cout << "ROW: " << mat.size() << "\tCOL: " << mat[0].size() << endl;
+}
+
+
+void get_MatRow(Mat& input, let index, Mat& output) {
+	output.push_back(input[index]);
+}
+
+void get_MatCol(Mat& input, let index, Mat& output) {
+	for (let i = 0; i < input.size(); i++)
+	{
+		MatVector vec{ input[i][index] };
+		output.push_back(vec);
+	}
+}
+
+void hSplit(Mat& input, let splitCount, vector<Mat>& outputs) {
+	let oneSplit = input.size() / splitCount;
+	for (let a = 0; a < splitCount; a++)
+	{	
+		Mat slice;
+		for (let b = 0; b < oneSplit; b++) {
+			slice.push_back(
+				input[ (oneSplit * a + b) ]
+			);
+		}
+		outputs.push_back(slice);
+	}
+}
+
+void vSplit(Mat& input, let splitCount, vector<Mat>& outputs) {
+	let size = input.size();
+	let oneSplit = input[0].size() / splitCount;
+	for (let i = 0; i < splitCount; i++)
+	{
+		Mat slice;
+		for (let r = 0; r < oneSplit; r++)
+		{
+			MatVector sliceVec;
+			for (let n = 0; n < size; n++)
+			{
+				sliceVec.push_back(
+					input[n][ (i * oneSplit + r) ]
+				);
+			}
+			slice.push_back(sliceVec);
+		}
+		outputs.push_back(slice);
+	}
+}
+
+int main() {
+	Mat matA{
+		{0, 1, 0, 1, 0, 0, 1, 0, 1, 0},
+		{0, 1, 0, 1, 0, 0, 1, 0, 1, 0},
+		{0, 0, 1, 0, 0, 0, 0, 1, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	};
+	showMat(matA);
+
+	vector<Mat> hSplits, vSplits;
+	//hSplit(matA, 2, hSplits);
+	//for (Mat m : hSplits) showMat(m);;
+
+	vSplit(matA, 2, vSplits);
+	for (Mat m : vSplits) showMat(m);
+}
